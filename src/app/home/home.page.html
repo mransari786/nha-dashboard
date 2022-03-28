@@ -1,0 +1,761 @@
+
+<body class="hold-transition layout-fixed sidebar-collapse">
+  <div class="wrapper">
+    
+  <!-- header HTML Start -->
+  <nav class="main-header navbar navbar-expand-md navbar-light custom-bgcolor2 nav-top py-0">
+    <div class="container-fluid">
+      <a href="#" class="navbar-brand">
+        <img style="max-width: 100px;" class="img-fluid" src="assets/dist/img/national-health-authority-logo.png" alt="">
+      </a>
+
+      <div class="collapse navbar-collapse order-3 justify-content-end">
+        <ul class="navbar-nav">
+         
+          <li class="nav-item">
+            <a href="#Skip-Main-Content" class="nav-link">Skip To Main Content</a>
+          </li>        
+        </ul>
+      </div>     
+    </div>
+  </nav>
+    
+
+  <nav class="main-header navbar navbar-expand-md navbar-light custom-bgcolor1 py-1">
+    <div class="container-fluid">
+      <a href="#" class="navbar-brand">
+        <img style="max-width: 90px;" class="img-fluid" src="assets/dist/img/abdm-logo.png" alt="">
+       
+      </a>
+
+      <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse order-3 justify-content-end" id="navbarCollapse">
+        <ul class="navbar-nav">
+          <li class="nav-item" >
+            <a href="https://healthid.abdm.gov.in/register" target="_blank" class="nav-link">Generate ABHA (Ayushman Bharat Health Account)
+              </a>
+          </li>
+          <li class="nav-item">
+            <a href="https://facility.ndhm.gov.in/" target="_blank" class="nav-link">Register Health Facility</a>
+          </li>
+          <li class="nav-item">
+            <a href="https://hpr.ndhm.gov.in/en" target="_blank" class="nav-link">Register as a Healthcare Professional</a>
+          </li>          
+         
+        </ul>
+      </div>     
+    </div>
+  </nav>
+  <!-- header HTML End -->
+      
+  
+    <div class="content-wrapper" id="Skip-Main-Content">
+  
+      
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-12 col-md-6">
+          
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="row justify-content-end my-2">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-4 mt-2">
+              <div class="form-group mb-0">
+                <select class="form-control" style="appearance: auto; width: 100%;"  (change)="bindDistrict($event.target.value)">
+                  <option value="" selected="selected">Select State</option>
+                  <option *ngFor="let st of stateList"  value={{st.value}}>
+                    {{st.text}}
+                  </option>
+                </select>
+                
+              </div>
+            </div>
+  <!--
+            <div class="col-12 col-sm-6 col-md-4 col-lg-4 my-2">
+              <div class="form-group mb-0">
+                <select class="form-control select2" style="width: 100%;"  (change)="GetData($event.target.value)">
+                  <option value="">Select District</option>
+                  <option *ngFor="let st of distList"  value={{st.value}}>
+                    {{st.text}}
+                  </option>
+                </select>
+              </div>
+            </div>
+  
+           --> 
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+      <section class="content-header pt-0">
+        <div class="container-fluid">     
+          <div class="row">
+            <div class="col-12 col-md-8">
+            <!--
+              <div class="subtitle-i">*Figures displayed in this dashboard are not updated on a real-time basis and are subject to reconciliation.</div>       
+              <div class="subtitle-i">*Health ID has now been renamed to Ayushman Bharat Health Account (ABHA); This does not impact existing functionalities.</div> 
+            -->
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="text-right subtitle">Last Updated : {{uploadDate}}</div>       
+            </div>
+          </div>
+             
+          <div class="row">
+            <div class="col-12 col-sm-6 col-md-4">
+              <div class="info-box">              
+                <div class="info-box-content pl-0">
+                  <span class="info-box-text font-weight-bold">Ayushman Bharat Health Accounts (ABHA) created</span>                  
+                  <div class="info-box-number">Today
+                    <b>{{HealthToday }}</b>
+                  </div>
+                  <div class="info-box-number">Overall
+                    <b>{{Overall}}</b>
+                  </div>
+                 <!-- <div class="info-box-number">% of Population
+                    <b>{{PopPer}}</b>
+                  </div>-->
+                  
+                </div>                          
+              </div>            
+            </div>  
+            <div class="col-12 col-sm-6 col-md-4">
+              <div class="info-box mb-3">              
+                <div class="info-box-content pl-0">
+                  <span class="info-box-text font-weight-bold">Health Facilities (Hospitals, Labs, etc.)</span>
+                  <div class="info-box-number">Registered – Today
+                    <b>{{FacilityToday}}</b>
+                  </div>
+                  <!-- <div class="info-box-number">Applications received – Today
+                    <b>{{FacilityToday  | number:'1.0':'en-US'}}</b>
+                  </div>
+                  <div class="info-box-number">Applications received – Overall
+                    <b>{{FacilityApp  | number:'1.0':'en-US'}}</b>
+                  </div>-->
+                  <div class="info-box-number">Registered – Overall
+                    <b>{{FacilityReg }}</b>
+                  </div>
+                  
+                </div>              
+              </div>
+            </div>
+            
+            
+            <div class="col-12 col-sm-6 col-md-4">
+              <div class="info-box mb-3">             
+                <div class="info-box-content pl-0">
+                  <span class="info-box-text font-weight-bold">Healthcare Professionals (Doctors, Nurses, etc.)</span>
+                  <div class="info-box-number">Registered – Today
+                    <b>{{ProfToday}}</b>
+                  </div>
+                  <!--
+                  <div class="info-box-number">Applications received – Today
+                    <b>{{ProfToday  | number:'1.0':'en-US'}}</b>
+                  </div>
+                  <div class="info-box-number">Applications received – Overall
+                    <b>{{ProfApp  | number:'1.0':'en-US'}}</b>
+                  </div>-->
+                  <div class="info-box-number">Registered – Overall
+                    <b>{{ProfReg }}</b>
+                  </div>
+                 
+                </div>
+              </div>
+            </div>
+             
+          </div>
+        </div>
+      </section>
+  
+      <section class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+             
+            </div>
+  
+            <div class="col-12">
+              <div class="custom-title" >{{stateDist }} - wise </div>
+             
+            </div>
+  
+            <div class="col-md-4">
+              <div class="card mb-4">
+                <div class="card-header" style="position: relative;">
+                  <h3 class="card-title">ABHAs Created</h3>
+                  <div style="position: absolute; left: 10; bottom: 0;">
+                  <span style="width: auto; font-size: 12px; color: #28a745;font-weight: bold;">Sort by: </span>  <button type="button" class="btn btn-tool" style="width: auto; font-size: 12px; color: #28a745;" ><i class="fas fa-arrow-up mr-1" (click)="getSort('TD','ABHA')"></i><i class="fas fa-arrow-down" (click)="getSort('TA','ABHA')">{{stateDist }}</i></button>
+                    <button type="button" class="btn btn-tool" style="width: auto; font-size: 12px; color: #28a745;" ><i class="fas fa-arrow-up mr-1" (click)="getSort('VD','ABHA')"></i><i class="fas fa-arrow-down" (click)="getSort('VA','ABHA')">Value</i></button>
+                  </div>
+                  <div class="card-tools">
+                    
+                    <button type="button" class="btn btn-tool" style="width: 20px;" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button _ngcontent-cir-c138="" type="button" style="width: 20px;" class="btn btn-tool" style="width: 20px;"  title="Export As Excel"><i class="fas fa-download" (click)="exportexcel('HITS','HICreatedTopState')"></i></button>
+                    
+                  </div>
+                </div>
+                <div class="card-body" style="overflow-y:scroll;height: 280px;">
+                  <div class="chart">
+                    <canvas #HealthIdtopUT style="min-height: 100px; max-width: 100%;"></canvas>
+
+                    
+
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-md-4">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h3 class="card-title">Registered Health Facilities </h3>
+                  <div style="position: absolute; left: 10; bottom: 0;">
+                    <span style="width: auto; font-size: 12px; color: #28a745;font-weight: bold;">Sort by: </span> <button type="button" class="btn btn-tool" style="width: auto; font-size: 12px; color: #28a745;" ><i class="fas fa-arrow-up mr-1" (click)="getSort('TD','HFTS')"></i><i class="fas fa-arrow-down" (click)="getSort('TA','HFTS')">{{stateDist }}</i></button>
+                    <button type="button" class="btn btn-tool" style="width: auto; font-size: 12px; color: #28a745;" ><i class="fas fa-arrow-up mr-1" (click)="getSort('VD','HFTS')"></i><i class="fas fa-arrow-down" (click)="getSort('VA','HFTS')">Value</i></button>
+                  </div>
+                  <div class="card-tools">
+                    
+                    <button type="button" class="btn btn-tool" style="width: 20px;" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button _ngcontent-cir-c138="" type="button" style="width: 20px;" class="btn btn-tool" title="Export As Excel"><i class="fas fa-download" (click)="exportexcel('HFTS','HFacilityTopState')"></i></button>
+                  </div>
+                </div>
+                <div class="card-body" style="overflow-y:scroll;height: 280px;">
+                  <div class="chart">
+                    <canvas #HealthRegistrytopUT  style="min-height: 100px; max-width: 100%;"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-md-4">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h3 class="card-title">Registered Healthcare Professionals</h3>
+                  <div style="position: absolute; left: 10; bottom: 0;">
+                    <span style="width: auto; font-size: 12px; color: #28a745;font-weight: bold;">Sort by: </span><button type="button" class="btn btn-tool" style="width: auto; font-size: 12px; color: #28a745;" ><i class="fas fa-arrow-up mr-1" (click)="getSort('TD','HPTS')"></i><i class="fas fa-arrow-down" (click)="getSort('TA','HPTS')">{{stateDist }}</i></button>
+                    <button type="button" class="btn btn-tool" style="width: auto; font-size: 12px; color: #28a745;" ><i class="fas fa-arrow-up mr-1" (click)="getSort('VD','HPTS')"></i><i class="fas fa-arrow-down" (click)="getSort('VA','HPTS')">Value</i></button>
+                  </div>
+                  <div class="card-tools">
+                    
+                    <button type="button" class="btn btn-tool" style="width: 20px;" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button _ngcontent-cir-c138="" type="button" style="width: 20px;" class="btn btn-tool" title="Export As Excel"><i class="fas fa-download" (click)="exportexcel('HPTS','HProfesstionalTopState')"></i></button>
+                  </div>
+                </div>
+                <div class="card-body" style="overflow-y:scroll;height: 280px;">
+                  <div class="chart">
+                    <canvas #ProfessionaltopUT style="min-height: 100px; max-width: 100%;"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-12">
+              <div class="custom-title">ABHA (Ayushman Bharat Health Account)</div>
+            </div>
+  
+            <div class="col-12 col-md-6">
+              <div class="card card-primary card-tabs">
+              <div class="card-header p-0 pt-1">
+              <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+              <li class="nav-item" style="position: relative;">
+              <a style="padding-right: 35px;" class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="false">ABHAs created by gender</a> <button type="button" style="width: 20px; position: absolute; z-index: 99; right: 12px; top: 18px;" class="btn btn-tool" title="Export As Excel"><i style="color: #000;" class="fas fa-download" (click)="exportexcel('HIG','HealthId_Gender_Wise')"></i></button>
+              </li>
+              <li class="nav-item" style="position: relative;">
+              <a style="padding-right: 35px;" class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="true">ABHAs created by Age</a> <button type="button" style="width: 20px; position: absolute; z-index: 99; right: 12px; top: 18px;" class="btn btn-tool" title="Export As Excel"><i style="color: #000;"class="fas fa-download" (click)="exportexcel('HIA','HealthId_Age_Wise')"></i></button>
+              </li>
+              <button type="button" class="btn btn-tool" style="width: 20px; position: absolute; right: 20px; top: 20px;" data-card-widget="collapse">
+                <i class="fas fa-minus" style="color: #000;"></i>
+              </button>
+              </ul>
+              </div>
+              <div class="card-body">
+              <div class="tab-content" id="custom-tabs-one-tabContent">
+              <div class="tab-pane fade  active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                <canvas #barGender style="min-height: 300px; height: 300px; max-height: 300px; max-width: 100%;"></canvas>
+              </div>
+              <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                <canvas #barAge  style="min-height: 300px; height: 300px; max-height: 300px; max-width: 100%;"></canvas>
+              </div>
+              </div>
+              </div>
+              
+              </div>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <div class="card card-primary card-tabs">
+                <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-age-tab" role="tablist">
+                <li class="nav-item" style="position: relative;">
+                <a style="padding-right: 35px;" class="nav-link active" id="custom-tabs-age-home-tab" data-toggle="pill" href="#custom-tabs-age-home" role="tab" aria-controls="custom-tabs-age-home" aria-selected="false">ABHAs created by partner</a>  
+                <button type="button" style="width: 20px; position: absolute; z-index: 99; right: 12px; top: 18px;" class="btn btn-tool" title="Export As Excel"><i style="color: #000;" class="fas fa-download" (click)="exportexcel('P','HealthId_Partner_Wise')"></i></button>
+                </li>
+                <li class="nav-item" style="position: relative;">
+                <a style="padding-right: 35px;" class="nav-link" id="custom-tabs-age-profile-tab" data-toggle="pill" href="#custom-tabs-age-profile" role="tab" aria-controls="custom-tabs-age-profile" aria-selected="true">ABHAs Linked</a>
+                <button type="button" style="width: 20px; position: absolute; z-index: 99; right: 12px; top: 18px;" class="btn btn-tool" title="Export As Excel"><i style="color: #000;" class="fas fa-download" (click)="exportexcel('ABHALP','ABHA_Linked_Count')"></i></button>
+                </li>
+                
+                </ul>
+                <button type="button" class="btn btn-tool" style="width: 20px; position: absolute; right: 20px; top: 20px;" data-card-widget="collapse">
+                  <i class="fas fa-minus" style="color: #000;"></i>
+                </button>
+                </div>
+                <div class="card-body">
+                <div class="tab-content" id="custom-tabs-age-tabContent" style="overflow-y: scroll; height: 300px;">
+                <div class="tab-pane fade  active show" id="custom-tabs-age-home" role="tabpanel" aria-labelledby="custom-tabs-age-home-tab">
+                  <table class="table table-striped m-0">                    
+                    <thead>
+                      <tr>
+                          <th>Partner Name</th>
+                          <th>ABHAs Created</th> 
+                          <th>ABHAs Linked</th>                          
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let part of PartnerWise">
+                          <td>{{ part.name }}</td>
+                          <td>{{ part.total}}</td>
+                         <td>{{ part.total_linked}}</td>
+                      </tr>
+                      </tbody>
+                  </table>
+                </div>
+                <div class="tab-pane fade" id="custom-tabs-age-profile" role="tabpanel" aria-labelledby="custom-tabs-age-profile-tab">
+                  <canvas #ABHALPChart style="min-height: 100px;  max-width: 100%;"></canvas>
+                </div>
+                </div>
+                </div>
+                
+                </div>
+                </div>
+
+            
+  
+            
+            <div class="col-md-12">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h3 class="card-title">ABHA Linked Trend</h3>
+                  <div class="card-tools">
+                    
+                    <button type="button" class="btn btn-tool" style="width: 20px;" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button _ngcontent-cir-c138="" type="button" style="width: 20px;" class="btn btn-tool" title="Export As Excel"><i class="fas fa-download" (click)="exportexcel('ABHALT','ABHA_Linked_Trend')"></i></button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="col-12 text-right right-tabs">
+                    <a href="#" id="ABHALW" (click)="ABHALclickme('W')" >Week</a>
+                    <a href="#" id="ABHALT" class="active" (click)="ABHALclickme('T')">Last 30 Days</a>
+                    <a href="#" id="ABHALA" (click)="ABHALclickme('A')">All</a>
+                    
+                  </div>
+                  <div class="chart">
+                    <canvas #ABHALChart style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;" ></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h3 class="card-title">ABHA Creation Trend<span style="font-size: 10px;"> (in Laksh)</span></h3>
+                  <div class="card-tools">
+                    
+                    <button type="button" class="btn btn-tool" style="width: 20px;" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button _ngcontent-cir-c138="" type="button" style="width: 20px;" class="btn btn-tool" title="Export As Excel"><i class="fas fa-download" (click)="exportexcel('HCT','ABHA_Creation_Trend')"></i></button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="col-12 text-right right-tabs">
+                    <a href="#" id="HCTW" (click)="HCTclickme('W')" >Week</a>
+                    <a href="#" id="HCTT" class="active" (click)="HCTclickme('T')">Last 30 Days</a>
+                    <a href="#" id="HCTA" (click)="HCTclickme('A')">All</a>
+                    
+                  </div>
+                  <div class="chart">
+                    <canvas #areaChart style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;" ></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+  <!--
+            <div class="col-md-6">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h3 class="card-title">Partner-wise Health-IDs Created</h3>
+                  <div class="card-tools">
+                     
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button _ngcontent-cir-c138="" type="button" class="btn btn-tool" title="Export As Excel"><i class="fas fa-download" (click)="exportexcel('P','Partner-wise_Health-IDs_Created')"></i></button>
+                  </div>
+                </div>
+                <div class="card-body" style="overflow-y: scroll; height: 400px;">
+                  <div class="table-responsive">
+                    <table class="table table-striped m-0">                    
+                      <thead>
+                        <tr>
+                            <th>Partner Name</th>
+                            <th>Health-ID Count (Overall)</th>                            
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let part of PartnerWise">
+                            <td>{{ part.text }}</td>
+                            <td>{{ part.value}}</td>
+                            
+                        </tr>
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          -->
+  <!--
+            <div class="col-md-6">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h3 class="card-title">State / UT-wise Health-IDs created</h3>
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button _ngcontent-cir-c138="" type="button" class="btn btn-tool" title="Export As Excel"><i class="fas fa-download" (click)="exportexcel('S','State_UT-wise_Health-IDs_created')"></i></button>
+                  </div>
+                </div>
+                
+                <div class="card-body" style="overflow-y: scroll; height: 400px;">
+                  <div class="table-responsive">
+                    <table class="table table-striped m-0">
+                      <thead>
+                      <tr>
+                        <th>State Name</th>
+                        <th>Health-IDs (Today)</th>
+                        <th>Health-IDs (Overall)</th>
+                       
+                        <th>Health-IDs (% of Population) <i title="Population figures considered are estimates and may vary as compared to actual population" class="fas fa-exclamation-circle"></i></th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let st of CreatedStateWise" >
+                          <td>{{ st.state_name }}</td>
+                          <td>{{ st.today }}</td>
+                          <td>{{ st.overall}}</td>
+                         
+                          <td>{{ st.populationper }}</td>
+                         
+                      </tr>
+                      
+                      </tbody>
+                    </table>
+                    
+                    
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+  -->
+            <div class="col-12">
+              <div class="custom-title">Health Facility Registry</div>
+            </div>
+  
+            <div class="col-md-4">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h3 class="card-title">Facilities Registrered by Ownership</h3>
+                  <div class="card-tools">
+                    
+                    <button type="button" class="btn btn-tool" style="width: 20px;" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button _ngcontent-cir-c138="" type="button" style="width: 20px;" class="btn btn-tool" title="Export As Excel"><i class="fas fa-download" (click)="exportexcel('FO','Facility_Ownership')"></i></button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="chart">
+                    <canvas #pieChartfacility style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-md-4">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h3 class="card-title">Facilities Registrered by System of Medicine</h3>
+                  <div class="card-tools">
+                     
+                    <button type="button" class="btn btn-tool" style="width: 20px;" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button _ngcontent-cir-c138="" type="button" style="width: 20px;"  class="btn btn-tool" title="Export As Excel"><i class="fas fa-download" (click)="exportexcel('FM','system_of_medicine')"></i></button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="chart">
+                    <canvas #pieChartsystem style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-md-4">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h3 class="card-title">Facility Applications Received</h3>
+                  <div class="card-tools">
+                     
+                    <button type="button" class="btn btn-tool" style="width: 20px;" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button _ngcontent-cir-c138="" type="button" style="width: 20px;" class="btn btn-tool" title="Export As Excel"><i class="fas fa-download" (click)="exportexcel('HFRS','Facility_Registry_State_Wise')"></i></button>
+                  </div>
+                </div>
+                <div class="card-body" style="overflow-y: scroll;height: 280px;">
+                  <div class="chart" >
+                    <canvas #HFRSChart style="min-height: 1000px; height: 1000px; max-height: 1000px; max-width: 100%;"></canvas>                                 
+                  </div>
+                </div>
+              </div>
+            </div>
+<!--
+            <div class="col-md-12">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h3 class="card-title">Health Facility Registry Applications Received</h3>
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button _ngcontent-cir-c138="" type="button" class="btn btn-tool" title="Export As Excel"><i class="fas fa-download" (click)="exportexcel('HFRAF','Facility_Registry_State_Flow')"></i></button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="col-12 text-right right-tabs">
+                    <a href="#" id="HFRAFW" (click)="HFRAFclickme('W')" >Week</a>
+                    <a href="#" id="HFRAFT" class="active" (click)="HFRAFclickme('T')">Last 30 Days</a>
+                    <a href="#" id="HFRAFA" (click)="HFRAFclickme('A')">All</a>
+                  </div>
+                  <div class="chart">
+                    <canvas #hfrafChart style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+  -->
+            <div class="col-12">
+              <div class="custom-title">Healthcare Professionals Registry</div>
+            </div>
+  
+            <div class="col-md-4">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h3 class="card-title">Professionals Registered by Employment Type</h3>
+                  <div class="card-tools">
+                     
+                    <button type="button" class="btn btn-tool" style="width: 20px;"  data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button _ngcontent-cir-c138="" type="button" style="width: 20px;" class="btn btn-tool" title="Export As Excel"><i class="fas fa-download" (click)="exportexcel('ET','Employment_Type')"></i></button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="chart">
+                    <canvas #professionalEnrolmentType style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-md-4">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h3 class="card-title" >Professionals Registered by System of Medicine</h3>
+                  <div class="card-tools">
+                     
+                    <button type="button" class="btn btn-tool" style="width: 15px;" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button _ngcontent-cir-c138="" type="button" class="btn btn-tool" style="width: 15px;" title="Export As Excel"><i class="fas fa-download" (click)="exportexcel('PM','Professional_Medicine')"></i></button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="chart">                  
+                    <canvas #professionalMedicine style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-md-4">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h3 class="card-title">Professionals - Applications Received</h3>
+                  <div class="card-tools">
+                    
+                    <button type="button" class="btn btn-tool" style="width: 20px;" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button _ngcontent-cir-c138="" type="button" style="width: 20px;" class="btn btn-tool" title="Export As Excel"><i class="fas fa-download" (click)="exportexcel('HPRS','Professional_Registry_State_Wise')"></i></button>
+                  </div>
+                </div>
+                <div class="card-body" style="overflow-y: scroll;height: 280px;">
+                  <div class="chart" >
+                    <canvas #HPRSChart style="min-height: 1000px; height: 1000px; max-height: 1000px; max-width: 100%;"></canvas>                                 
+                  </div>
+                </div>
+              </div>
+            </div>
+  <!--
+            <div class="col-md-12">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h3 class="card-title">Healthcare Professionals Registry Applications Received</h3>
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button _ngcontent-cir-c138="" type="button" class="btn btn-tool" title="Export As Excel"><i class="fas fa-download" (click)="exportexcel('HPRAF','Professional_Registry_State_Flow')"></i></button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="col-12 text-right right-tabs">
+                    <a href="#" id="HPRAFW" (click)="HPRAFclickme('W')" >Week</a>
+                    <a href="#" id="HPRAFW" class="active" (click)="HPRAFclickme('T')">Last 30 Days</a>
+                    <a href="#" id="HPRAFW" (click)="HPRAFclickme('A')">All</a>
+                  </div>
+                  <div class="chart" >
+                    <canvas #hprafChart style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas> 
+                  </div>
+                </div>
+              </div>
+            </div>
+          -->
+  
+            
+            <!-- <canvas id="visitors-chart" height="200"></canvas> -->
+            <!-- <canvas id="areaChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas> -->
+            <!-- <canvas id="stackedBarChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas> -->
+            <canvas id="lineChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: none;"></canvas>
+            
+          </div> 
+          <div class="row">
+            <div class="col-12 col-md-8">
+            
+              <div class="subtitle-i">NOTE:</div> 
+              <div class="subtitle-i">Figures displayed in this dashboard are not updated on a real-time basis and are subject to reconciliation.</div>             
+              <div class="subtitle-i">Health ID has now been renamed to Ayushman Bharat Health Account (ABHA); This does not impact existing functionalities.</div> 
+            
+            </div>
+            <div class="col-12 col-md-4">
+              <!--
+              <div class="text-right subtitle">Last Updated : {{uploadDate}}</div>   -->    
+            </div>
+          </div>       
+        </div>
+      </section>
+      
+    </div>
+    
+    <!-- footer HTML Start -->
+<footer class="main-footer custom-bgcolor1">
+  <div class="container-fluid mt-3">
+    <div class="row">
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="footer-in">
+          <h4>Address</h4>
+          <p>National Health Authority</p>
+          <p>3rd, 7th & 9th Floor, Tower - l, </p>
+          <p>Jeevan Bharti Building,</p>
+          <p>Connaught Place, New Delhi - 110 001</p>
+          <p>E-mail : abdm@nha.gov.in</p>
+          <p><i class="fa fa-phone" style="transform: rotateY(180deg); font-size: .75rem;"></i> Toll-Free Number : 1800-11-4477 / 14477</p>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="footer-in">
+          <h4>Important Links</h4>
+          <ul>
+            <li><a href="https://www.mohfw.gov.in/" target="_blank"><i class="fa fa-circle"></i>Ministry of Health and Family Welfare</a></li>
+            <li><a href="https://healthid.abdm.gov.in/" target="_blank"><i class="fa fa-circle"></i>ABHA (Previously Health ID)</a></li>
+            <li><a href="https://hpr.abdm.gov.in/en" target="_blank"><i class="fa fa-circle"></i>Healthcare Professionals Registry (HPR)</a></li>
+            <li><a href="https://facility.abdm.gov.in/" target="_blank"><i class="fa fa-circle"></i>Health Facility Registry (HFR)</a></li>
+            <li><a href="https://grievance.abdm.gov.in/" target="_blank"><i class="fa fa-circle"></i>Grievance Portal</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="footer-in">
+          <h4>Policies</h4>
+          <ul>
+            <li><a href="https://abdm.gov.in/home/terms_condition" target="_blank"><i class="fa fa-circle"></i>Terms & Conditions</a></li>
+            <li><a href="https://abdm.gov.in/home/website_policy" target="_blank"><i class="fa fa-circle"></i>Website Policy</a></li>
+            <li><a href="https://abdm.gov.in/documents/hdmpolicy/privacypolicy" target="_blank"><i class="fa fa-circle"></i>Data Privacy policy</a></li>
+            <li><a href="https://abdm.gov.in/documents/health_management_policy" target="_blank"><i class="fa fa-circle"></i>Health Data Management policy</a></li>
+            <li><a href="https://abdm.gov.in/documents/ABDM_Health_Records_PHR_mobile_application_privacy_policy" target="_blank"><i class="fa fa-circle"></i>ABDM Health Records (PHR) Mobile Application Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="footer-in">
+          <h4>Health Records </h4>
+          <div class="footer-card-in">
+            <div class="footer-qr">
+              <a href="https://play.google.com/store/apps/details?id=in.ndhm.phr" target="_blank"><img class="img-fluid" src="assets/dist/img/qr.jpg" alt=""></a>
+              <a href="https://play.google.com/store/apps/details?id=in.ndhm.phr" target="_blank"><img class="img-fluid" src="assets/dist/img/play-store.png" alt=""></a>
+            </div>
+            <div class="footer-qr-text">
+              <p>Health Records is a personal health viewer app from National Health Authority. This app helps the citizens to maintain their health records at one place.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-center footer-text">This Website belongs to National Health Authority, Ministry of Health and Family Welfare, Government of India </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 text-center footer-text">
+        <div class="footer-counter"> </div>
+        <div class="footer-counter">Page Last Updated on :  {{uploadDate}}</div>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- footer HTML End -->
+  
+  </div>
+  
+  
+
+  
+  </body>
+  

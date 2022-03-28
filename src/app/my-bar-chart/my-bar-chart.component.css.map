@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "my-bar-chart.component.scss"
+    ],
+    "names": [],
+    "file": "my-bar-chart.component.css"
+}
