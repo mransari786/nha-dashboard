@@ -186,6 +186,9 @@ ABHALPOriginArr:any;
 PTUTState_District:any;
 HRTUTState_District:any;
 HITUTState_District:any;
+partnerSort:any;
+
+SortHLP:any;
   //barChart:any;
   @ViewChild('barGender') barGender;
   @ViewChild('barAge') barAge;
@@ -830,7 +833,7 @@ HITUTState_District:any;
           },
           onClick: (evt, item) => {
             let index = item[0]["index"];
-            console.log("index : "+index);
+            //console.log("index : "+index);
             this.statename.state_name=this.FState[index];   
             this.apiService.GetStateCode(this.statename).subscribe((response) => { 
              if(response['status']=="true")
@@ -953,7 +956,7 @@ HITUTState_District:any;
             //console.log("index : "+index);
             this.statename.state_name=this.PState[index];   
             this.apiService.GetStateCode(this.statename).subscribe((response) => {
-              console.log("status : "+response['status']); 
+              //console.log("status : "+response['status']); 
              if(response['status']=="true")
               {
                 if(this.PTUTState_District=="S")
@@ -1052,7 +1055,7 @@ HITUTState_District:any;
     
     this.apiService.GetHealthTrendData(this.statedistReq).subscribe((response) => { 
          // this.chResp=response; 
-       console.log(response);  
+       //console.log(response);  
         if(response['status']=="true")
     {
       //console.log("Test "+this.chResp.list?.text);  
@@ -1065,6 +1068,7 @@ HITUTState_District:any;
       this.jsonDataABHALP=[];
         
         this.ABHALPtxtArr=response['list'];
+        this.SortHLP = response['list'];
         this.jsonDataABHALP = response['list'];
         
         //const list =  this.txtArr;
@@ -1088,7 +1092,7 @@ HITUTState_District:any;
         data: {
           labels: this.ABHALPTextArr,
           datasets: [{  
-            label:'ABHAs Linked'  ,        
+            label:'Health Records Linked'  ,        
             data: this.ABHALPValueArr,
             backgroundColor:'#4F98C3', // array should have same number of elements as number of dataset
             borderColor: 'rgb(38, 194, 129)',// array should have same number of elements as number of dataset
@@ -1100,12 +1104,12 @@ HITUTState_District:any;
           plugins:{
             legend:{display: false}
             ,datalabels: {
-              display: false,
+              display: true,
               align: 'end', 
-              color:'red'             
+              color:'black'             
             }
           },          
-          indexAxis: 'y', scales:{x:{grid:{display:false},position:'top'},y:{grid:{display:false}}},         
+          indexAxis: 'y', scales:{x:{grid:{display:false},position:'top'},y:{grid:{display:false}},},         
           elements: {
             line: {
               borderWidth: 0,              
@@ -1134,7 +1138,7 @@ HITUTState_District:any;
     
     this.apiService.GetHospitalLinked(this.hosplinkreq).subscribe((response) => { 
          // this.chResp=response; 
-       console.log(response);  
+       //console.log(response);  
         if(response['status']=="true")
     {
       //console.log("Test "+this.chResp.list?.text);  
@@ -1147,6 +1151,7 @@ HITUTState_District:any;
       this.jsonDataABHALP=[];
         
         this.ABHALPtxtArr=response['list'];
+        this.SortHLP = response['list'];
         this.jsonDataABHALP = response['list'];
         
         //const list =  this.txtArr;
@@ -1156,37 +1161,39 @@ HITUTState_District:any;
         
           for(var i in this.ABHALPtxtArr)
           {
-            this.ABHALPTextArr.push(this.ABHALPtxtArr[i]['text']);
+            this.ABHALPTextArr.push(this.ABHALPtxtArr[i]['text'].split("\n"));
             this.ABHALPValueArr.push(this.ABHALPtxtArr[i]['value']);           
             //this.ABHALPValueArr.push(this.ABHALPtxtArr[i]['value']);  
           }
         //console.log (this.ABHALPValueArr);
         this.ABHALElement = this.ABHALPChart.nativeElement;
-          var px=(this.ABHALPtxtArr.length*14)+"px";
+          var px=(this.ABHALPtxtArr.length*16)+"px";
           this.ABHALElement.style.height=px;
+          
       this.ABHALPbars = new Chart(this.ABHALPChart.nativeElement, {
         type: 'bar',        
         data: {
           labels: this.ABHALPTextArr,
           datasets: [{  
-            label:'ABHAs Linked'  ,        
+            label:'Health Records Linked'  ,        
             data: this.ABHALPValueArr,
             backgroundColor:'#4F98C3', // array should have same number of elements as number of dataset
             borderColor: 'rgb(38, 194, 129)',// array should have same number of elements as number of dataset
             borderWidth: 1,
             
           }]
-        },
+                  },
         options: {
           plugins:{
             legend:{display: false}
             ,datalabels: {
-              display: false,
+              display: true,
               align: 'end', 
-              color:'red'             
+              color:'black' ,
+                        
             }
           },          
-          indexAxis: 'y', scales:{x:{grid:{display:false},position:'top'},y:{grid:{display:false}}},         
+          indexAxis: 'y', scales:{x:{grid:{display:false},position:'top'},y:{grid:{display:false},ticks:{font:{size:11}}}},         
           elements: {
             line: {
               borderWidth: 0,              
@@ -1194,9 +1201,14 @@ HITUTState_District:any;
           },
           onClick: (evt, item) => {
             this.ABHALPbars.destroy();
-            this.GetABHALP('ABHAL','',"","","")      
+            if(this.state!=""){
+              this.GetABHALP('ABHAL','',this.state,"","")
+            }
+            else{
+            this.GetABHALP('ABHAL','',"","","")   }   
   
           }
+          
         }
       });
     }
@@ -1341,37 +1353,52 @@ HITUTState_District:any;
 
     this.ABHALbars.destroy();
     this.GetABHALinkedTrend('ABHALT','T',val,"")
-
+    
     this.GetHealthIdParnerWise(val,"");
+    
+    this.GetHealthData(val,"");
 
     this.HITSBars.destroy();
-    this.HIGBars.destroy();
-    this.bars1.destroy();
-    this.HFTSBars.destroy();
-    this.HPTSBars.destroy();
-    this.FOBar.destroy();
-    this.GetHealthData(val,"");
     this.getHealthStateWiseData(val,"");
-    this.GetHealthIdGender(val,"");  
+    
+    this.HIGBars.destroy();
+    this.GetHealthIdGender(val,""); 
+    
+    this.bars1.destroy();
     this.GetHealthCreationTren('HCT','T',val,""); 
+    
     this.GetHealthIdCreatedStateWise(val,"");
+
+    this.HFTSBars.destroy();
     this.getTopStateFacility(val,"");
+    
+    this.HPTSBars.destroy();
     this.getTopStateProf(val,""); 
+    
+    this.FOBar.destroy();
     this.GetFacilityOwner(val,"");
+    
     this.HFRSBar.destroy();
     this.GetHFRS(val,"");
+    
     this.HPRSBar.destroy();
     this.GetHPRS(val,"");
-    this.bars2.destroy();
-    this.GetHFRAF('HFRAF','T',val,""); 
-    this.bars3.destroy();
-    this.GetHPRAF('HPRAF','T',val,""); 
+    
+    //this.bars2.destroy();
+    //this.GetHFRAF('HFRAF','T',val,""); 
+    
+    //this.bars3.destroy();
+    //this.GetHPRAF('HPRAF','T',val,""); 
+   
     this.HABar.destroy();
     this.GetHealthIdAge(val,"");
+    
     this.FMbars.destroy();
     this.GetFacilityMedicine(val,"");
+
     this.PMbars.destroy();
     this.GetProfessionalMedicine(val,"");
+
     this.PEbars.destroy();
     this.GetProfessionalEnrolmentType(val,"");
     
@@ -1652,7 +1679,7 @@ HITUTState_District:any;
         var list=response['list']
         var arrState = list;
         this.jsonDataFM=list;
-        //console.log(response);
+        //console.log(arrState);
           for(var i in arrState) {
             this.FMTextArr.push(arrState[i]['text'].trim());        
             this.FMValueArr.push(arrState[i]['value']); 
@@ -1903,7 +1930,7 @@ HITUTState_District:any;
     this.statedistReq.district_code=district_code;   
     this.statedistReq.rpttype=rpttype;       
     this.apiService.GetHealthTrendData(this.statedistReq).subscribe((response) => {   
-      console.log(response);          
+      //console.log(response);          
         if(response['status']=="true")
     {
      
@@ -1928,7 +1955,7 @@ HITUTState_District:any;
         data: {
           labels: this.ABHALTextArr,
           datasets: [{  
-            label:'ABHA Record Linked'  ,        
+            label:'Health Records Linked'  ,        
             data: this.ABHALRecordCount,
             //backgroundColor: 'blue',//'rgb(38, 194, 129)', // array should have same number of elements as number of dataset
             borderColor: 'blue',// array should have same number of elements as number of dataset
@@ -2296,9 +2323,11 @@ HITUTState_District:any;
     this.statedistReq.rpttype="";
     this.jsonDataP=[];
     this.apiService.GetHealthTrendData(this.statedistReq).subscribe((response) => { 
-      console.log(response);    
+      //console.log(response);    
         if(response['status']=="true")
     {
+      this.partnerSort=[];
+      this.partnerSort=response['list'];
       this.jsonDataP=response['list'];
       this.PartnerWise=response['list'];
     }
@@ -2359,11 +2388,37 @@ GetStateCode(statename:any)
     });
   }
 
+  PartnersortByTotalDesc(resp:any) {    
+    return resp.sort((a: any, b: any) => {     
+      return <any>new Number(b.total.replace(/,/g, '')) - <any>new Number(a.total.replace(/,/g, ''));
+    });
+  }
+  
+  PartnersortByTotalAsc(resp:any) {  
+    return resp.sort((a: any, b: any) => {      
+      return <any>new Number(a.total.replace(/,/g, '')) - <any>new Number(b.total.replace(/,/g, ''));
+    });
+  }
+
+  PartnersortByCountDesc(resp:any) {    
+    return resp.sort((a: any, b: any) => {     
+      return <any>new Number(b.total_linked.replace(/,/g, '')) - <any>new Number(a.total_linked.replace(/,/g, ''));
+    });
+  }
+  
+  PartnersortByCountAsc(resp:any) {  
+    return resp.sort((a: any, b: any) => {      
+      return <any>new Number(a.total_linked.replace(/,/g, '')) - <any>new Number(b.total_linked.replace(/,/g, ''));
+    });
+  }
+
   sortByTextAsc(prop){
     return function(a,b){
-       if (a[prop] > b[prop]){
+      //toUpperCase()
+      //console.log(a[prop].toUpperCase());
+       if (a[prop].toUpperCase() > b[prop].toUpperCase()){
            return 1;
-       } else if(a[prop] < b[prop]){
+       } else if(a[prop].toUpperCase() < b[prop].toUpperCase()){
            return -1;
        }
        return 0;
@@ -2372,17 +2427,157 @@ GetStateCode(statename:any)
 
  sortByTextDesc(prop){
   return function(a,b){
-     if (a[prop] > b[prop]){
+     if (a[prop].toUpperCase() > b[prop].toUpperCase()){
          return -1;
-     } else if(a[prop] < b[prop]){
+     } else if(a[prop].toUpperCase() < b[prop].toUpperCase()){
          return 1;
      }
      return 0;
   }
 }
 
+getSortPartner(type:any,rpttype:any)
+  {
+    var varPartner= this.partnerSort;
+    //console.log( this.partnerSort);
+    if(type=="A" && rpttype=='Name')
+       {      
+        varPartner.sort(this.sortByTextAsc('name'))
+       }
+       if(type=="D" && rpttype=='Name')
+       {
+        varPartner.sort(this.sortByTextDesc('name'))
+       }
+
+       if(type=="A" && rpttype=='Total')
+       {    
+         varPartner=this.PartnersortByTotalAsc(this.partnerSort);
+       }
+       if(type=="D" && rpttype=='Total')
+       {
+        varPartner=this.PartnersortByTotalDesc(this.partnerSort);
+       }
+
+       if(type=="A" && rpttype=='Count')
+       {    
+         varPartner=this.PartnersortByCountAsc(this.partnerSort);
+       }
+       if(type=="D" && rpttype=='Count')
+       {
+        varPartner=this.PartnersortByCountDesc(this.partnerSort);
+       }
+
+      this.PartnerWise=varPartner;
+  }
   getSort(type:any,rpttype:any)
   {
+
+    if(rpttype=="HLP"){
+      console.log("in sort");
+      var hlpArray = this.SortHLP;
+      this.ABHALPbars.destroy();
+      this.ABHALPTextArr = [];
+      this.ABHALPValueArr = [];
+      this.ABHALPOriginArr = [];
+      if(type=="VA"){
+        hlpArray = this.sortByValueAsc(this.SortHLP);
+      }
+      if(type=="VD"){
+        hlpArray = this.sortByValueDesc(this.SortHLP);
+      }
+      if(type=="PA"){
+        hlpArray.sort(this.sortByTextAsc('text'));
+      }
+      if(type=="PD"){
+        hlpArray.sort(this.sortByTextDesc('text'));
+      }
+
+      for(var i in this.ABHALPtxtArr)
+        {
+          this.ABHALPTextArr.push(hlpArray[i]['text'].split("\n"));
+          this.ABHALPValueArr.push(hlpArray[i]['value']);           
+          this.ABHALPOriginArr.push(hlpArray[i]['origin']);           
+        }
+if(origin==""){
+      this.ABHALPbars = new Chart(this.ABHALPChart.nativeElement, {
+        type: 'bar',        
+        data: {
+          labels: this.ABHALPTextArr,
+          datasets: [{  
+            label:'ABHAs Linked'  ,        
+            data: this.ABHALPValueArr,
+            backgroundColor:'#9cb9db', // array should have same number of elements as number of dataset
+            borderColor: 'rgb(38, 194, 129)',// array should have same number of elements as number of dataset
+            borderWidth: 1,
+            
+          }]
+        },
+        options: {
+          plugins:{
+            legend:{display: false}
+            ,datalabels: {
+              display: true,
+              align: 'right', 
+              color:'black'             
+            }
+          },          
+          indexAxis: 'y', scales:{x:{grid:{display:false},position:'top'},y:{grid:{display:false},ticks:{font:{size:11}}}},         
+          elements: {
+            line: {
+              borderWidth: 0,              
+            }
+          },
+          onClick: (evt, item) => {
+            let index = item[0]["index"];
+            var orign=this.ABHALPOriginArr[index];   
+            if(orign!="")
+            {
+              console.log("in sort if");
+              this.ABHALPbars.destroy();
+              this.GetABHALP("","",this.state,"",orign)
+            } 
+            }
+        }
+      }); }
+      if(origin!=""){
+        this.ABHALPbars = new Chart(this.ABHALPChart.nativeElement, {
+          type: 'bar',        
+          data: {
+            labels: this.ABHALPTextArr,
+            datasets: [{  
+              label:'ABHAs Linked'  ,        
+              data: this.ABHALPValueArr,
+              backgroundColor:'#9cb9db', // array should have same number of elements as number of dataset
+              borderColor: 'rgb(38, 194, 129)',// array should have same number of elements as number of dataset
+              borderWidth: 1,
+              
+            }]
+          },
+          options: {
+            plugins:{
+              legend:{display: false}
+              ,datalabels: {
+                display: true,
+                align: 'end', 
+                color:'black'             
+              }
+            },          
+            indexAxis: 'y',scales:{x:{grid:{display:false},position:'top'},y:{grid:{display:false},ticks:{font:{size:11}}}},         
+            elements: {
+              line: {
+                borderWidth: 0,              
+              }
+            },
+            onClick: (evt, item) => {
+              this.ABHALPbars.destroy();
+              this.GetABHALP('ABHAL','',"","","")      
+            }
+          }
+        });
+      }
+    }
+
+
     if(rpttype=="ABHA")
     {
       var arrState=this.SortABHA;
@@ -2457,7 +2652,7 @@ GetStateCode(statename:any)
           },
           onClick: (evt, item) => {
             let index = item[0]["index"];
-            console.log("index : "+index);
+            //console.log("index : "+index);
             this.statename.state_name=this.StateArray[index];   
             this.apiService.GetStateCode(this.statename).subscribe((response) => { 
              if(response['status']=="true")
@@ -2562,7 +2757,7 @@ GetStateCode(statename:any)
         },
         onClick: (evt, item) => {
           let index = item[0]["index"];
-          console.log("index : "+index);
+          //console.log("index : "+index);
           this.statename.state_name=this.FState[index];   
           this.apiService.GetStateCode(this.statename).subscribe((response) => { 
            if(response['status']=="true")
@@ -2669,7 +2864,7 @@ GetStateCode(statename:any)
         },
         onClick: (evt, item) => {
           let index = item[0]["index"];
-          console.log("index : "+index);
+          //console.log("index : "+index);
           this.statename.state_name=this.PState[index];   
           this.apiService.GetStateCode(this.statename).subscribe((response) => { 
            if(response['status']=="true")
@@ -2690,5 +2885,47 @@ GetStateCode(statename:any)
     });
 
     }
+  }
+  drawTabBar(){
+    if(this.state!=""){
+      this.ABHALPbars.destroy();
+      this.GetABHALP('ABHAL','',this.state,"","");
+      }
+    }
+  exportAllExcel(){
+    const dataHitsWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataHITS);
+    const dataHftsWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataHFTS);
+    const dataHptsWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataHPTS);
+    const dataHigWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataHIG);
+    const dataHiaWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataHIA);
+    const dataHctWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataHCT);
+    const dataPWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataP);
+    // const dataSWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataS);
+    const dataFoWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataFO);
+    const dataFmWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataFM);
+    const dataHfrsWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataHFRS);
+    const dataEtWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataET);
+    const dataPmWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataPM);
+    const dataHprsWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataHPRS);
+    // const dataHprafWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataHPRAF);
+    // const dataHfrafWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataHFRAF);
+    const dataAbhalWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataABHAL);
+    const dataAbhalpWs:XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.jsonDataABHALP);
+    const wb: XLSX.WorkBook = { 
+      Sheets: { 'HICreatedTopState': dataHitsWs, 'HFacilityTopState':dataHftsWs,
+                'HProfesstionalTopState':dataHptsWs,'HealthId_Gender_Wise':dataHigWs,
+                'HealthId_Age_Wise':dataHiaWs,'HealthId_Partner_Wise':dataPWs,
+                'ABHA_Linked_Count':dataAbhalpWs,'ABHA_Linked_Trend':dataAbhalWs,
+                'ABHA_Creation_Trend':dataHctWs,'Facility_Ownership':dataFoWs,
+                'system_of_medicine':dataFmWs,'Facility_Registry_State_Wise':dataHfrsWs,
+                'Employment_Type':dataEtWs,'Professional_Medicine':dataPmWs,
+                'Prof_Registry_State_Wise':dataHprsWs }, 
+      SheetNames: ['HICreatedTopState','HFacilityTopState','HProfesstionalTopState',
+      'HealthId_Gender_Wise','HealthId_Age_Wise','HealthId_Partner_Wise','ABHA_Linked_Count',
+      'ABHA_Linked_Trend','ABHA_Creation_Trend','Facility_Ownership','system_of_medicine',
+      'Facility_Registry_State_Wise','Employment_Type','Professional_Medicine','Prof_Registry_State_Wise'] 
+    };
+    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    this.saveExcelFile(excelBuffer, "DashboardData");
   }
 }

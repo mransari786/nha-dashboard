@@ -104,7 +104,10 @@
             -->
             </div>
             <div class="col-12 col-md-4">
-              <div class="text-right subtitle">Last Updated : {{uploadDate}}</div>       
+              <div class="text-right subtitle">Last Updated : {{uploadDate}}</div>  
+              <div class="text-right subtitle">
+                <button _ngcontent-cir-c138="" type="button" class="btn btn-tool" title="Export As Excel"><i class="fas fa-download" (click)="exportAllExcel()"></i></button>
+            </div>     
             </div>
           </div>
              
@@ -303,8 +306,8 @@
                 <a style="padding-right: 35px;" class="nav-link active" id="custom-tabs-age-home-tab" data-toggle="pill" href="#custom-tabs-age-home" role="tab" aria-controls="custom-tabs-age-home" aria-selected="false">ABHAs created by partner</a>  
                 <button type="button" style="width: 20px; position: absolute; z-index: 99; right: 12px; top: 18px;" class="btn btn-tool" title="Export As Excel"><i style="color: #000;" class="fas fa-download" (click)="exportexcel('P','HealthId_Partner_Wise')"></i></button>
                 </li>
-                <li class="nav-item" style="position: relative;">
-                <a style="padding-right: 35px;" class="nav-link" id="custom-tabs-age-profile-tab" data-toggle="pill" href="#custom-tabs-age-profile" role="tab" aria-controls="custom-tabs-age-profile" aria-selected="true">ABHAs Linked</a>
+                <li class="nav-item " style="position: relative;">
+                <a style="padding-right: 35px;" class="nav-link" id="custom-tabs-age-profile-tab" data-toggle="pill" href="#custom-tabs-age-profile" role="tab" aria-controls="custom-tabs-age-profile" aria-selected="true" (click)="drawTabBar()">Health Records Linked</a>
                 <button type="button" style="width: 20px; position: absolute; z-index: 99; right: 12px; top: 18px;" class="btn btn-tool" title="Export As Excel"><i style="color: #000;" class="fas fa-download" (click)="exportexcel('ABHALP','ABHA_Linked_Count')"></i></button>
                 </li>
                 
@@ -314,14 +317,20 @@
                 </button>
                 </div>
                 <div class="card-body">
-                <div class="tab-content" id="custom-tabs-age-tabContent" style="overflow-y: scroll; height: 300px;">
+                <div class="tab-content" id="custom-tabs-age-tabContent" style="overflow-y: scroll; height: 300px; overflow-x: scroll;">
                 <div class="tab-pane fade  active show" id="custom-tabs-age-home" role="tabpanel" aria-labelledby="custom-tabs-age-home-tab">
+                  <div style="position: absolute; left: 15px; top: 45px;">
+                    <span style="width: auto; font-size: 12px; color: #28a745;font-weight: bold;">Sort by: </span> 
+                    <button type="button" class="btn btn-tool" style="width: auto; font-size: 12px; color: #28a745;" ><i class="fas fa-arrow-up mr-1" (click)="getSortPartner('D','Name')"></i><i class="fas fa-arrow-down" (click)="getSortPartner('A','Name')">Partner</i></button>
+                    <button type="button" class="btn btn-tool" style="width: auto; font-size: 12px; color: #28a745;" ><i class="fas fa-arrow-up mr-1" (click)="getSortPartner('D','Total')"></i><i class="fas fa-arrow-down" (click)="getSortPartner('A','Total')">Created Count</i></button>
+                    <button type="button" class="btn btn-tool" style="width: auto; font-size: 12px; color: #28a745;" ><i class="fas fa-arrow-up mr-1" (click)="getSortPartner('D','Count')"></i><i class="fas fa-arrow-down" (click)="getSortPartner('A','Count')">Linked Count</i></button>
+                  </div>
                   <table class="table table-striped m-0">                    
                     <thead>
                       <tr>
-                          <th>Partner Name</th>
-                          <th>ABHAs Created</th> 
-                          <th>ABHAs Linked</th>                          
+                          <th>Partner Name<!-- <br><button type="button" class="btn btn-tool" style="width: auto; font-size: 12px; color: #28a745;" ><i class="fas fa-arrow-up mr-1" (click)="getSortPartner('D','Name')"></i><i class="fas fa-arrow-down" (click)="getSortPartner('A','Name')"></i></button>--></th>
+                          <th>ABHAs Created <!--<button type="button" class="btn btn-tool" style="width: auto; font-size: 12px; color: #28a745;" ><i class="fas fa-arrow-up mr-1" (click)="getSortPartner('D','Total')"></i><i class="fas fa-arrow-down" (click)="getSortPartner('A','Total')"></i></button>--></th> 
+                          <th>ABHAs Linked<!--<button type="button" class="btn btn-tool" style="width: auto; font-size: 12px; color: #28a745;" ><i class="fas fa-arrow-up mr-1" (click)="getSortPartner('D','Count')"></i><i class="fas fa-arrow-down" (click)="getSortPartner('A','Count')"></i></button>--></th>                          
                       </tr>
                       </thead>
                       <tbody>
@@ -334,6 +343,11 @@
                   </table>
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-age-profile" role="tabpanel" aria-labelledby="custom-tabs-age-profile-tab">
+                  <div style="position: absolute; left: 265px; top: 40px;">
+                    <span style="width: auto; font-size: 12px; color: #28a745;font-weight: bold;">Sort by: </span> 
+                    <button type="button" class="btn btn-tool" style="width: auto; font-size: 12px; color: #28a745;" ><i class="fas fa-arrow-up mr-1" (click)="getSort('PD','HLP')"></i><i class="fas fa-arrow-down" (click)="getSort('PA','HLP')">Name</i></button>
+                    <button type="button" class="btn btn-tool" style="width: auto; font-size: 12px; color: #28a745;" ><i class="fas fa-arrow-up mr-1" (click)="getSort('VD','HLP')"></i><i class="fas fa-arrow-down" (click)="getSort('VA','HLP')">Value</i></button>
+                  </div>
                   <canvas #ABHALPChart style="min-height: 100px;  max-width: 100%;"></canvas>
                 </div>
                 </div>
@@ -348,7 +362,7 @@
             <div class="col-md-12">
               <div class="card mb-4">
                 <div class="card-header">
-                  <h3 class="card-title">ABHA Linked Trend</h3>
+                  <h3 class="card-title">Health Records Linked Trend</h3>
                   <div class="card-tools">
                     
                     <button type="button" class="btn btn-tool" style="width: 20px;" data-card-widget="collapse">
